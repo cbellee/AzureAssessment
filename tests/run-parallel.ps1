@@ -1,3 +1,5 @@
+#Requires -Version 5.1
+
 [CmdletBinding()]
 
 param(
@@ -8,7 +10,7 @@ param(
     [guid[]]$ExcludedSubscriptions = @('', ''),
 
     [Parameter()]
-    [int]$MaxResults = 5000
+    [int]$MaxResults = 5000,
 
     [Parameter()]
     [int[]]$DefaultRules = @(65000, 65001, 65500)
@@ -18,55 +20,24 @@ $InformationPreference = 'Continue'
 $testPath = (Resolve-Path -Path "$PSScriptRoot\resource.tests.parallel.ps1").Path
 
 # import custom module
-$modulePath = (Resolve-Path -Path "$PSScriptRoot/../modules/AzureAssessment.psd1").Path
+$modulePath = (Resolve-Path -Path "$PSScriptRoot\..\modules\AzureAssessment.psd1").Path
 Import-Module -Name $modulePath -Force
 
 # install the Resource Graph (pre-release) module from PowerShell Gallery
 if (-not (Get-Module -Name AzureRm.ResourceGraph -ListAvailable)) {
-    Write-Information -MessageData "installing module 'AzureRm.ResourceGraph'"
-    Install-Module -Name AzureRm.ResourceGraph -AllowPrerelease
+    try {
+        Write-Information -MessageData "installing module 'AzureRm.ResourceGraph'"
+        Install-Module -Name AzureRm.ResourceGraph -AllowPrerelease -ErrorAction Stop
+    }
+    catch {
+        throw "Error Occurred installing module 'AzureRm.ResourceGraph' `n$_"
+    }
 }
 
 # connect to Azure
 if ((Get-AzureRmContext).Tenant.Id -ne $TenantId) {
     Connect-AzureRmAccount -TenantId $TenantId
 }
-
-$resourceDiagnostics = 'Microsoft.AnalysisServices/servers',
-'Microsoft.ApiManagement/service',
-'Microsoft.Automation/automationAccounts',
-'Microsoft.Batch/batchAccounts',
-'Microsoft.Cdn/profiles/endpoints',
-'Microsoft.ClassicNetwork/networksecuritygroups',
-'Microsoft.CognitiveServices/accounts',
-'Microsoft.ContainerService/managedClusters',
-'Microsoft.CustomerInsights/hubs',
-'Microsoft.DataFactory/factories',
-'Microsoft.DataLakeAnalytics/accounts',
-'Microsoft.DataLakeStore/accounts',
-'Microsoft.DBforPostgreSQL/servers',
-'Microsoft.Devices/IotHubs',
-'Microsoft.Devices/provisioningServices',
-'Microsoft.DocumentDB/databaseAccounts',
-'Microsoft.EventHub/namespaces',
-'Microsoft.KeyVault/vaults',
-'Microsoft.Logic/workflows',
-'Microsoft.Logic/integrationAccounts',
-'Microsoft.Network/networksecuritygroups',
-'Microsoft.Network/loadBalancers',
-'Microsoft.Network/publicIPAddresses',
-'Microsoft.Network/applicationGateways',
-'Microsoft.Network/securegateways',
-'Microsoft.Network/azurefirewalls',
-'Microsoft.Network/virtualNetworkGateways',
-'Microsoft.Network/trafficManagerProfiles',
-'Microsoft.Network/expressRouteCircuits',
-'Microsoft.PowerBIDedicated/capacities',
-'Microsoft.RecoveryServices/Vaults',
-'Microsoft.Search/searchServices',
-'Microsoft.ServiceBus/namespaces',
-'Microsoft.Sql/servers/databases',
-'Microsoft.StreamAnalytics/streamingjobs'
 
 # import diagnostics categories
 Write-Information -MessageData "importing diagnostics categories csv file $PSScriptRoot\..\data\diagnosticLogCategories.txt"
@@ -174,10 +145,10 @@ $rsPool.Dispose()
 $html = $pipelineResults.TestResult | 
     Sort-Object -Property Context, Describe, Passed -Descending | 
     Select-Object -Property `
-    @{n = 'Result'; e = {$_.Passed}}, 
-    @{n = 'Subscription'; e = {$_.Context}}, 
-    @{n = 'ResourceType'; e = {$_.Describe}}, 
-    @{n = 'Test'; e = {$_.Name}} | 
+@{n = 'Result'; e = {$_.Passed}}, 
+@{n = 'Subscription'; e = {$_.Context}}, 
+@{n = 'ResourceType'; e = {$_.Describe}}, 
+@{n = 'Test'; e = {$_.Name}} | 
     ConvertTo-Html -CssUri 'css/style.css' -Title "Azure Assessment"
 
 $html -replace '<td>True</td>', '<td bgcolor="#00FF00">Pass</td>' -replace `
