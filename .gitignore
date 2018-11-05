@@ -1,0 +1,4 @@
+data/
+tests/results/*.html
+tests/results/*.json
+tests/results/*.xml
