@@ -8,7 +8,7 @@ PowerShell: v5.1 (untested on PowerShell core v6.0+ or newer Az-* modules)
 
 PowerShell Modules: 'AzureRM.Profile', 'AzureRM.RecoveryServices', 'AzureRM.Resources', 'AzureRM.Insights', 'AzureRM.Storage', 'AzureRM.KeyVault', 'AzureRM.Sql', 'AzureRM.ResourceGraph'
 
-[Azure Resource Graph Module]{https://docs.microsoft.com/en-us/azure/governance/resource-graph/first-query-powershell#add-the-resource-graph-module)
+[Azure Resource Graph Module](https://docs.microsoft.com/en-us/azure/governance/resource-graph/first-query-powershell#add-the-resource-graph-module)
 
 ## Usage
 
