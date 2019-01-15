@@ -10,7 +10,7 @@ PowerShell Modules: 'AzureRM.Profile', 'AzureRM.RecoveryServices', 'AzureRM.Reso
 
 [Azure Resource Graph Module](https://docs.microsoft.com/en-us/azure/governance/resource-graph/first-query-powershell#add-the-resource-graph-module)
 
-# Install the Resource Graph module from PowerShell Gallery
+Install the Resource Graph module from PowerShell Gallery
 Install-Module -Name Az.ResourceGraph
 
 ## Usage
