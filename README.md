@@ -4,7 +4,7 @@ A combination of PowerShell Pester tests and Azure Resource Graph to collect & e
 
 ## Pre-requisites
 
-- PowerShell: v5.1 (untested on PowerShell core v6.0+ or newer Az-* modules)
+- PowerShell: v5.1 (untested on PowerShell core v6.0+ or newer Az-* modules, but YMMV)
 
     - Required PowerShell Modules: 
         - AzureRM.Profile
