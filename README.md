@@ -12,7 +12,7 @@ PowerShell Modules: 'AzureRM.Profile', 'AzureRM.RecoveryServices', 'AzureRM.Reso
 
 Install the Resource Graph module from PowerShell Gallery
 
-```Install-Module -Name Az.ResourceGraph```
+```Install-Module -Name AzureRm.ResourceGraph -AllowPrerelease```
 
 ## Usage
 
